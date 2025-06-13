@@ -1,9 +1,9 @@
-console.log("script.js loaded");
-
 const healthSlider = document.getElementById("health-slider");
 const healthLabel = document.getElementById("health-label");
 const resultsDiv = document.getElementById("results");
+const submitBtn = document.getElementById("submit-btn");
 
+// Grocery and meal suggestions
 const groceryOptions = {
   "Degenerate": ["Frozen Pizza", "Chips", "Soda", "Instant Noodles", "Ice Cream"],
   "Lazy": ["Bread", "Cheese", "Deli Meat", "Microwave Meals", "Juice"],
@@ -36,10 +36,15 @@ healthSlider.addEventListener("input", () => {
   }
 });
 
-document.getElementById("submit-btn").addEventListener("click", () => {
+submitBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  console.log("Decide button clicked!");
+
   const budget = document.getElementById("budget").value.trim();
   const notes = document.getElementById("notes").value.trim();
   const health = healthLabel.textContent;
+
+  console.log({ budget, notes, health });
 
   const budgetText = budget === "" ? "No budget set" : budget;
   const notesText = notes === "" ? "No extra notes" : notes;
@@ -57,8 +62,13 @@ document.getElementById("submit-btn").addEventListener("click", () => {
 
   const normalizedKey = keyMap[normalizedHealth] || "Average";
 
+  console.log("Normalized key:", normalizedKey);
+
   const groceries = groceryOptions[normalizedKey];
   const meals = mealIdeas[normalizedKey];
+
+  console.log("Groceries:", groceries);
+  console.log("Meals:", meals);
 
   const groceryListHTML = groceries.map(item => `<li>${item}</li>`).join("");
   const mealListHTML = meals.map(item => `<li>${item}</li>`).join("");

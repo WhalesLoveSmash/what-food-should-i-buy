@@ -122,6 +122,6 @@ button:active {
     margin-top: 30px;
     font-size: 1.3rem;
     font-weight: 600;
-    color: #0077b6;
+    color: white; /* changed from #0077b6 */
     letter-spacing: 0.03em;
 }
