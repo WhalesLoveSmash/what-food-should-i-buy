@@ -17,7 +17,7 @@ healthSlider.addEventListener("input", () => {
 });
 
 
-//randomly generate a food suggestion when decide button is clicked
+//randomly generate a food suggestion on clik
 const foods = ["Pizza", "Sushi", "Tacos", "Ice Cream", "Salad"];
 document.getElementById("submit-btn").addEventListener("click", () => {
   const randomFood = foods[Math.floor(Math.random() * foods.length)];
