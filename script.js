@@ -1,3 +1,5 @@
+console.log("script.js loaded");
+
 const healthSlider = document.getElementById("health-slider");
 const healthLabel = document.getElementById("health-label");
 const resultsDiv = document.getElementById("results");
