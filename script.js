@@ -18,6 +18,7 @@ const mealIdeas = {
   "Immortal": ["Chia seed pudding", "Kale smoothie", "Organic veggie stir-fry"]
 };
 
+// Update health label on slider input
 healthSlider.addEventListener("input", () => {
   const val = healthSlider.value;
   if (val < 20) {
@@ -34,21 +35,26 @@ healthSlider.addEventListener("input", () => {
 });
 
 document.getElementById("submit-btn").addEventListener("click", () => {
-  const budget = document.getElementById("budget").value || "No budget set";
+  // Read budget, notes, health level
+  const budget = document.getElementById("budget").value.trim();
+  const notes = document.getElementById("notes").value.trim();
   const health = healthLabel.textContent;
-  const notes = document.getElementById("notes").value || "No extra notes";
 
-  const groceries = groceryOptions[health];
-  const meals = mealIdeas[health];
+  // Defaults if empty
+  const budgetText = budget === "" ? "No budget set" : budget;
+  const notesText = notes === "" ? "No extra notes" : notes;
+
+  const groceries = groceryOptions[health] || ["Random Food 1", "Random Food 2"];
+  const meals = mealIdeas[health] || ["Random Meal 1", "Random Meal 2"];
 
   const groceryListHTML = groceries.map(item => `<li>${item}</li>`).join("");
   const mealListHTML = meals.map(item => `<li>${item}</li>`).join("");
 
   resultsDiv.innerHTML = `
-    <h2>Suggested Grocery List (Budget: ${budget})</h2>
+    <h2>Suggested Grocery List (Budget: ${budgetText})</h2>
     <ul>${groceryListHTML}</ul>
     <h2>Meal Ideas</h2>
     <ul>${mealListHTML}</ul>
-    <p><em>Notes: ${notes}</em></p>
+    <p><em>Notes: ${notesText}</em></p>
   `;
 });
