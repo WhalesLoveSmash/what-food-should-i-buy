@@ -35,17 +35,28 @@ healthSlider.addEventListener("input", () => {
 });
 
 document.getElementById("submit-btn").addEventListener("click", () => {
-  // Read budget, notes, health level
   const budget = document.getElementById("budget").value.trim();
   const notes = document.getElementById("notes").value.trim();
   const health = healthLabel.textContent;
 
-  // Defaults if empty
   const budgetText = budget === "" ? "No budget set" : budget;
   const notesText = notes === "" ? "No extra notes" : notes;
 
-  const groceries = groceryOptions[health] || ["Random Food 1", "Random Food 2"];
-  const meals = mealIdeas[health] || ["Random Meal 1", "Random Meal 2"];
+  // Normalize health label text to match keys
+  const normalizedHealth = health.trim().toLowerCase();
+
+  const keyMap = {
+    "degenerate": "Degenerate",
+    "lazy": "Lazy",
+    "average": "Average",
+    "can cook": "Can Cook",
+    "immortal": "Immortal"
+  };
+
+  const normalizedKey = keyMap[normalizedHealth] || "Average";
+
+  const groceries = groceryOptions[normalizedKey];
+  const meals = mealIdeas[normalizedKey];
 
   const groceryListHTML = groceries.map(item => `<li>${item}</li>`).join("");
   const mealListHTML = meals.map(item => `<li>${item}</li>`).join("");
