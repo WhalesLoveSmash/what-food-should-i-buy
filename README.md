@@ -5,7 +5,9 @@ Chose where you fall between health nut and total degenerate <br>
 Enter any additional considerations and get your shopping list <br>
 Tbh this is a gemini wrapper 😭 <br>
 
-#todo: smoother slider, hide api key (requires makig API cause backend on GH Pages)
+#todo: smoother slider, <br>
+make food/recipies reach horizontrol screen edges on desktop, <br>
+hide api key (requires makig API since no backend on GH Pages) <br>
 
 Tech stack and implementation details
 
