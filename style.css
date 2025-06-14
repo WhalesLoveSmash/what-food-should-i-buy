@@ -211,3 +211,94 @@ button:active {
     justify-content: center;
   }
 }
+
+/* ========== ADDED SLIDER STYLING & LABEL ANIMATION ========== */
+
+input[type="range"] {
+  -webkit-appearance: none;
+  height: 14px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #d90429 0%, #f48c06 20%, #fcdc4d 40%, #8ac926 60%, #1982c4 80%, #6a4c93 100%);
+  box-shadow: 0 0 8px #1982c4aa;
+  transition: box-shadow 0.3s ease;
+}
+
+input[type="range"]:hover {
+  box-shadow: 0 0 14px #1982c4dd;
+}
+
+input[type="range"]:focus {
+  outline: none;
+  box-shadow: 0 0 20px #1982c4ff;
+}
+
+/* Thumb for WebKit */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #023e8a;
+  border: 3px solid #90e0ef;
+  box-shadow: 0 0 10px #90e0efcc;
+  cursor: pointer;
+  margin-top: -7px; /* vertically center thumb */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+input[type="range"]:hover::-webkit-slider-thumb {
+  background-color: #0077b6;
+  transform: scale(1.1);
+}
+
+input[type="range"]:active::-webkit-slider-thumb {
+  transform: scale(1.3);
+  box-shadow: 0 0 18px #48cae4ff;
+}
+
+/* Thumb for Firefox */
+input[type="range"]::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #023e8a;
+  border: 3px solid #90e0ef;
+  box-shadow: 0 0 10px #90e0efcc;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+input[type="range"]:hover::-moz-range-thumb {
+  background-color: #0077b6;
+  transform: scale(1.1);
+}
+
+input[type="range"]:active::-moz-range-thumb {
+  transform: scale(1.3);
+  box-shadow: 0 0 18px #48cae4ff;
+}
+
+/* Health label animation */
+#health-label {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+#health-label.active {
+  opacity: 1;
+  transform: translateY(0);
+  animation: popIn 0.3s ease forwards;
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.95) translateY(10px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
