@@ -7,7 +7,7 @@ Tbh this is a gemini wrapper 😭 <br>
 
 #todo: smoother slider, <br>
 make food/recipies reach horizontrol screen edges on desktop, <br>
-hide api key (requires makig API since no backend on GH Pages) <br>
+hide api key (requires making API since no backend on GH Pages) <br>
 
 Tech stack and implementation details
 
