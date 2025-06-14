@@ -11,7 +11,7 @@ This is a fully client-side, static web app with zero dependencies or build tool
 
 Image uploads are handled via native <input type="file" multiple> with no backend — image recognition is stubbed with a promise simulating async behavior, making it easy to swap in a real API later without changing UI logic.
 
-Health slider uses native <input type="range"> with dynamic label updates tied directly to input events — minimal DOM manipulation and no external UI libs.
+Health slider uses native <input type="range"> with dynamic label updates tied directly to input events — minimal DOM manipulation and no external UI libraries.
 
 Suggestion generation is pure JS logic encapsulated in a few pure functions, cleanly separating concerns between detection, suggestion creation, and rendering. This keeps the code modular and easy to extend or refactor.
 
