@@ -5,7 +5,8 @@ Chose where you fall between health nut and total degenerate <br>
 Enter any additional considerations and get your shopping list <br>
 Tbh this is a gemini wrapper 😭 <br>
 
-#todo: smoother slider, <br>
+#todo: diferent cooking things like can say have oven and crockpot <br> 
+smoother slider, <br>
 make food/recipies reach horizontrol screen edges on desktop, <br>
 hide api key (requires workaround since no backend on GH Pages) <br>
 
