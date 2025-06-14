@@ -7,9 +7,9 @@ Tbh this is a gemini wrapper 😭 <br>
 
 #todo: smoother slider, <br>
 make food/recipies reach horizontrol screen edges on desktop, <br>
-hide api key (requires making API since no backend on GH Pages) <br>
+hide api key (requires workaround since no backend on GH Pages) <br>
 
-Tech stack and implementation details
+Tech stack and implementation:
 
 This is a fully client-side, static web app with zero dependencies or build tooling — just vanilla HTML, CSS, and ES6+ JavaScript. No frameworks, no bundlers, no node modules.
 
