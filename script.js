@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const budgetInput = document.getElementById('budget');
   const healthSlider = document.getElementById('health-slider');
   const healthText = document.getElementById('health-text');
+  const healthText = document.getElementById('health-text');
   const notesInput = document.getElementById('notes');
   const submitBtn = document.getElementById('submit-btn');
   const resultsDiv = document.getElementById('results');
@@ -41,10 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
     return new Promise(resolve => {
       setTimeout(() => {
         resolve(['cheese', 'bread', 'carrot']); // example detected foods
+        resolve(['cheese', 'bread', 'carrot']); // example detected foods
       }, 500);
     });
   }
 
+  // Generate food and recipe suggestions based on inputs and detected foods
   // Generate food and recipe suggestions based on inputs and detected foods
   function generateSuggestions(detectedFoods, budget, healthiness, notes) {
     let baseSuggestions;
@@ -80,7 +83,9 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (budget > 25) maxItems = 5;
 
     const suggestions = combinedSuggestions.slice(0, maxItems);
+    const suggestions = combinedSuggestions.slice(0, maxItems);
 
+    // Example recipe suggestions (can be expanded later)
     // Example recipe suggestions (can be expanded later)
     const recipes = [
       { title: "Veggie Stir Fry", desc: "Quick sauté of fresh veggies with soy sauce and garlic." },
@@ -158,13 +163,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Generate and display results
     const healthDesc = getHealthinessText(healthVal);
+    const healthDesc = getHealthinessText(healthVal);
     const { suggestions, recipes } = generateSuggestions(
       detectedFoods,
       budgetVal,
       healthDesc,
+      healthDesc,
       notesVal
     );
 
+    displayResults(suggestions, recipes, budgetVal, healthDesc, notesVal);
     displayResults(suggestions, recipes, budgetVal, healthDesc, notesVal);
 
     // Smooth scroll results into view
