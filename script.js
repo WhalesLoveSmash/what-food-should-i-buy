@@ -2,20 +2,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const imageUpload = document.getElementById('image-upload');
   const budgetInput = document.getElementById('budget');
   const healthSlider = document.getElementById('health-slider');
-  const healthLabel = document.getElementById('health-label');
+  const healthText = document.getElementById('health-text');
   const notesInput = document.getElementById('notes');
   const submitBtn = document.getElementById('submit-btn');
   const resultsDiv = document.getElementById('results');
 
-  // Update health label text dynamically as slider moves
+  // Animate healthText fade out and in when changing text
+  function animateHealthText(newText) {
+    healthText.style.opacity = 0;
+    setTimeout(() => {
+      healthText.textContent = newText;
+      healthText.style.opacity = 1;
+    }, 200);
+  }
+
+  // Update health text dynamically as slider moves with animation
   healthSlider.addEventListener('input', () => {
     const val = parseInt(healthSlider.value, 10);
-    if (val <= 33) healthLabel.textContent = 'Unhealthy';
-    else if (val <= 66) healthLabel.textContent = 'Average';
-    else healthLabel.textContent = 'Healthy';
+    if (val <= 33) animateHealthText('Unhealthy');
+    else if (val <= 66) animateHealthText('Average');
+    else animateHealthText('Healthy');
   });
 
-  // Convert numeric health slider value to descriptive text
+  // Convert numeric health slider value to descriptive text (lowercase)
   function getHealthinessText(val) {
     if (val <= 33) return 'unhealthy';
     else if (val <= 66) return 'average healthiness';
@@ -27,12 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Replace with real image recognition API call in production
     return new Promise(resolve => {
       setTimeout(() => {
-        resolve(['cheese', 'bread', 'carrot']);
+        resolve(['cheese', 'bread', 'carrot']); // example detected foods
       }, 500);
     });
   }
 
-  // Generate food and recipe suggestions based on inputs
+  // Generate food and recipe suggestions based on inputs and detected foods
   function generateSuggestions(detectedFoods, budget, healthiness, notes) {
     let baseSuggestions;
 
@@ -44,15 +53,30 @@ document.addEventListener('DOMContentLoaded', () => {
       baseSuggestions = ['comfort foods', 'carbs', 'cheese', 'some vegetables'];
     }
 
+    // Promote detected foods if they exist in base suggestions (put detected foods at front)
+    const detectedLower = detectedFoods.map(f => f.toLowerCase());
+    const promotedSuggestions = [];
+    const others = [];
+
+    baseSuggestions.forEach(item => {
+      if (detectedLower.includes(item.toLowerCase())) {
+        promotedSuggestions.push(item);
+      } else {
+        others.push(item);
+      }
+    });
+
+    const combinedSuggestions = [...promotedSuggestions, ...others];
+
     // Determine number of suggestions based on budget
     let maxItems = 3;
     if (budget > 50) maxItems = 6;
     else if (budget > 25) maxItems = 5;
     else if (budget > 10) maxItems = 4;
 
-    const suggestions = baseSuggestions.slice(0, maxItems);
+    const suggestions = combinedSuggestions.slice(0, maxItems);
 
-    // Example recipe suggestions
+    // Example recipe suggestions (can be expanded later)
     const recipes = [
       { title: "Veggie Stir Fry", desc: "Quick sauté of fresh veggies with soy sauce and garlic." },
       { title: "Grilled Chicken Salad", desc: "Lean grilled chicken served on mixed greens." },
@@ -128,14 +152,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const detectedFoods = await detectFoodsFromImages(files);
 
     // Generate and display results
+    const healthDesc = getHealthinessText(healthVal);
     const { suggestions, recipes } = generateSuggestions(
       detectedFoods,
       budgetVal,
-      getHealthinessText(healthVal),
+      healthDesc,
       notesVal
     );
 
-    displayResults(suggestions, recipes, budgetVal, getHealthinessText(healthVal), notesVal);
+    displayResults(suggestions, recipes, budgetVal, healthDesc, notesVal);
 
     // Smooth scroll results into view
     resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });

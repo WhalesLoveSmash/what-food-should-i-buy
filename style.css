@@ -222,7 +222,7 @@ input[type="range"] {
   background: linear-gradient(90deg, #d90429 0%, #f48c06 20%, #fcdc4d 40%, #8ac926 60%, #1982c4 80%, #6a4c93 100%);
   box-shadow: 0 0 8px #1982c4aa;
   transition: box-shadow 0.3s ease;
-}
+} 
 
 input[type="range"]:hover {
   box-shadow: 0 0 14px #1982c4dd;
@@ -302,4 +302,16 @@ input[type="range"]:active::-moz-range-thumb {
     transform: scale(1) translateY(0);
     opacity: 1;
   }
+}
+
+/* === New style for slider option text below Healthiness label === */
+
+#health-text {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #03045e; /* dark navy for contrast */
+  margin-top: 8px;
+  margin-bottom: 20px;
+  user-select: none;
+  letter-spacing: 0.02em;
 }
