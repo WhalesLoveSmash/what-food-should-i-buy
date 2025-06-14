@@ -3,42 +3,42 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" href="data:,">
   <title>What Food Should I Buy?</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <main>
+    <h1>Food Suggestions & Recipes</h1>
 
-  <h1>What Food Should I Buy?</h1>
+    <section class="input-section">
+      <form id="foodForm">
+        <div class="form-row">
+          <label for="budget">Budget ($):</label>
+          <input type="number" id="budget" min="1" max="500" value="50" required />
+        </div>
 
-  <form id="food-form">
+        <div class="form-row">
+          <label for="healthPref">Healthiness Preference:</label>
+          <select id="healthPref" required>
+            <option value="healthy">Healthy</option>
+            <option value="balanced">Balanced</option>
+            <option value="indulgent">Indulgent</option>
+          </select>
+        </div>
 
-    <label class="input-label" for="image-upload">
-      Upload pictures of your current food:
-      <input type="file" id="image-upload" accept="image/*" multiple />
-    </label>
+        <div class="form-row">
+          <label for="notes">Notes (e.g. scared of vegetables):</label>
+          <input type="text" id="notes" placeholder="Optional notes" />
+        </div>
 
-    <label id="budget-label" class="input-label" for="budget">
-      Budget:
-      <input type="number" id="budget" min="0" />
-    </label>
+        <button type="submit">Get Suggestions</button>
+      </form>
+    </section>
 
-    <label for="health-slider">
-      Healthiness:
-    </label>
-    <br />
-    <input type="range" id="health-slider" min="0" max="100" value="50" />
-    <p id="health-label">Average</p>
-
-    <label class="input-label" for="notes">
-      Additional considerations:
-      <textarea id="notes" rows="4" cols="40"></textarea>
-    </label>
-
-    <button type="button" id="submit-btn">Decide</button>
-  </form>
-
-  <div id="results"></div>
+    <section id="output" aria-live="polite" role="region" class="output-section">
+      <!-- Suggestions and recipes appear here -->
+    </section>
+  </main>
 
   <script src="script.js"></script>
 </body>
