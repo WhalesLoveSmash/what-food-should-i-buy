@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Basic validation
     if (files.length === 0) {
-      alert('Please upload at least one image of your food.');
+      // alert('Please upload at least one image of your food.');
       return;
     }
     if (budgetVal < 0 || isNaN(budgetVal)) {
