@@ -5,6 +5,8 @@ Chose where you fall between health nut and total degenerate <br>
 Enter any additional considerations and get your shopping list <br>
 Tbh this is a gemini wrapper 😭 <br>
 
+#todo: smoother slider, hide api key (requires makig API cause backend on GH Pages)
+
 Tech stack and implementation details
 
 This is a fully client-side, static web app with zero dependencies or build tooling — just vanilla HTML, CSS, and ES6+ JavaScript. No frameworks, no bundlers, no node modules.
