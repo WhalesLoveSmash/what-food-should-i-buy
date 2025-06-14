@@ -215,6 +215,7 @@ button:active {
 /* ========== ADDED SLIDER STYLING & LABEL ANIMATION ========== */
 
 input[type="range"] {
+  appearance: none;
   -webkit-appearance: none;
   height: 14px;
   border-radius: 10px;
