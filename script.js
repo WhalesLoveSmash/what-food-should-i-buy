@@ -20,20 +20,28 @@ healthSlider.addEventListener('input', () => {
   }
 });
 
-// Example Gemini vision function (replace with your actual API call)
-async function analyzeImageWithGemini(imageFile) {
-  // Dummy example simulating a call returning recognized foods
-  // Replace with your real API call logic here
+// Smooth scroll when focusing on notes (textarea) on mobile to avoid keyboard blocking
+notesInput.addEventListener('focus', () => {
+  setTimeout(() => {
+    notesInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 300); // slight delay to allow keyboard to start appearing
+});
 
-  // Simulate delay and response
+// Dummy Gemini vision simulation - replace with your real API call
+async function analyzeImageWithGemini(imageFile) {
+  // Simulate delay & example recognized foods
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(['apple', 'banana', 'bread']);
+      // Randomize a few food items for demo purposes
+      const demoFoods = ['apple', 'banana', 'bread', 'cheese', 'carrot'];
+      // Return 3 random items for fun
+      const shuffled = demoFoods.sort(() => 0.5 - Math.random());
+      resolve(shuffled.slice(0, 3));
     }, 1000);
   });
 }
 
-// Main handler
+// Main form submit logic
 submitBtn.addEventListener('click', async () => {
   resultsDiv.textContent = 'Analyzing images...';
 
@@ -43,33 +51,35 @@ submitBtn.addEventListener('click', async () => {
     return;
   }
 
-  let allFoodItems = [];
+  try {
+    let allFoodItems = [];
 
-  // Analyze each uploaded image
-  for (const file of files) {
-    try {
+    for (const file of files) {
       const foods = await analyzeImageWithGemini(file);
       allFoodItems = allFoodItems.concat(foods);
-    } catch (e) {
-      console.error('Error analyzing image:', e);
     }
+
+    // Remove duplicates
+    allFoodItems = [...new Set(allFoodItems)];
+
+    if (allFoodItems.length === 0) {
+      resultsDiv.textContent = "Oops! Couldn't read your food pics. Try again or upload clearer images.";
+      return;
+    }
+
+    const budget = budgetInput.value || 'any';
+    const healthiness = healthLabel.textContent.toLowerCase();
+    const notes = notesInput.value.trim() || 'no special considerations';
+
+    resultsDiv.innerHTML = `
+      <p>Detected foods: ${allFoodItems.join(', ')}</p>
+      <p>Budget: ${budget}</p>
+      <p>Healthiness preference: ${healthiness}</p>
+      <p>Notes: ${notes}</p>
+      <p><strong>Suggested food to buy:</strong> Based on your current food and preferences, consider adding fresh vegetables and proteins to balance your diet.</p>
+    `;
+  } catch (error) {
+    console.error('Error during analysis:', error);
+    resultsDiv.textContent = "Something went wrong while analyzing. Please try again.";
   }
-
-  if (allFoodItems.length === 0) {
-    resultsDiv.textContent = "Oops! Couldn't read your food pics. Try again or upload clearer images.";
-    return;
-  }
-
-  // Compose a simple suggestion message (you can expand this later)
-  const budget = budgetInput.value || 'any';
-  const healthiness = healthLabel.textContent.toLowerCase();
-  const notes = notesInput.value || 'no special considerations';
-
-  resultsDiv.innerHTML = `
-    <p>Detected foods: ${allFoodItems.join(', ')}</p>
-    <p>Budget: ${budget}</p>
-    <p>Healthiness preference: ${healthiness}</p>
-    <p>Notes: ${notes}</p>
-    <p><strong>Suggested food to buy:</strong> Based on your current food and preferences, consider adding fresh vegetables and proteins to balance your diet.</p>
-  `;
 });
