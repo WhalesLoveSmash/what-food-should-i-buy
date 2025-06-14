@@ -1,169 +1,155 @@
-// Wait for DOM ready
 document.addEventListener('DOMContentLoaded', () => {
-
-  const form = document.getElementById('food-form');
-  const submitBtn = document.getElementById('submit-btn');
-  const resultsDiv = document.getElementById('results');
+  const imageUpload = document.getElementById('image-upload');
   const budgetInput = document.getElementById('budget');
   const healthSlider = document.getElementById('health-slider');
   const healthLabel = document.getElementById('health-label');
   const notesInput = document.getElementById('notes');
+  const submitBtn = document.getElementById('submit-btn');
+  const resultsDiv = document.getElementById('results');
 
-  // Update health label dynamically
+  // Update health label text based on slider value
   healthSlider.addEventListener('input', () => {
     const val = parseInt(healthSlider.value);
     if (val <= 33) healthLabel.textContent = 'Unhealthy';
     else if (val <= 66) healthLabel.textContent = 'Average';
     else healthLabel.textContent = 'Healthy';
-
-    // On mobile, hide number keyboard if open on budget input
-    if (document.activeElement === budgetInput) {
-      budgetInput.blur();
-    }
   });
 
-  // Smooth scroll into view when notes textarea focused (mobile-friendly)
-  notesInput.addEventListener('focus', () => {
-    setTimeout(() => {
-      notesInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 300);
-  });
-
-  // Fake food detection for demo — Replace with your real detection logic
-  // For now, just return a fixed array for testing
-  function detectFoodsFromImages() {
-    // You can read from the file input, run vision API, etc.
-    // For now, pretend we detected:
-    return ['cheese', 'bread', 'carrot'];
+  // Utility: convert slider number to text for suggestion prompt
+  function getHealthinessText(val) {
+    if (val <= 33) return 'unhealthy';
+    else if (val <= 66) return 'average healthiness';
+    else return 'healthy';
   }
 
-  // Mock suggestion generation based on inputs
-  // You can replace this with AI or API calls
-  function generateSuggestions(budget, healthiness, notes) {
-    // Suggest food items based on budget and healthiness
-    // We'll pick some items depending on healthiness preference
-    const healthyFoods = ['fresh vegetables', 'lean proteins', 'whole grains', 'fruits', 'nuts'];
-    const averageFoods = ['pasta', 'chicken', 'rice', 'cheese', 'eggs'];
-    const unhealthyFoods = ['snacks', 'processed meats', 'soda', 'chips'];
-
-    let chosenFoods;
-    if (healthiness > 66) chosenFoods = healthyFoods;
-    else if (healthiness > 33) chosenFoods = averageFoods;
-    else chosenFoods = unhealthyFoods;
-
-    // Calculate approx number of items user can buy for the budget
-    // Just a rough guess: average cost $3 per item
-    const maxItems = Math.min(chosenFoods.length, Math.floor(budget / 3));
-
-    return chosenFoods.slice(0, maxItems);
-  }
-
-  // Mock recipe generation
-  function generateRecipes() {
-    return [
-      {
-        title: 'Veggie Stir Fry',
-        ingredients: ['Broccoli', 'Carrots', 'Bell Peppers', 'Soy Sauce', 'Garlic'],
-        instructions: 'Chop vegetables. Heat oil in a pan. Stir fry veggies until tender. Add soy sauce and garlic. Serve over rice.'
-      },
-      {
-        title: 'Chicken and Rice Bowl',
-        ingredients: ['Chicken Breast', 'Rice', 'Mixed Vegetables', 'Teriyaki Sauce'],
-        instructions: 'Cook rice. Grill chicken. Steam vegetables. Combine and drizzle with teriyaki sauce.'
-      },
-      {
-        title: 'Fruit & Nut Salad',
-        ingredients: ['Mixed Greens', 'Apple Slices', 'Walnuts', 'Cranberries', 'Feta Cheese'],
-        instructions: 'Mix greens with apple slices, walnuts, and cranberries. Top with feta cheese and a light vinaigrette.'
-      }
-    ];
-  }
-
-  // Clear previous results and build new output UI
-  function displayResults(suggestions, recipes, budget, healthinessText, notes) {
-    resultsDiv.innerHTML = '';
-
-    // Main heading for suggestions
-    const sugTitle = document.createElement('h2');
-    sugTitle.textContent = 'Suggested Food to Buy';
-    sugTitle.className = 'results-section-title';
-    resultsDiv.appendChild(sugTitle);
-
-    // Suggestions horizontal scroll container
-    const sugContainer = document.createElement('div');
-    sugContainer.className = 'horizontal-scroll-container';
-    suggestions.forEach(food => {
-      const card = document.createElement('div');
-      card.className = 'result-card';
-      card.textContent = food;
-      sugContainer.appendChild(card);
+  // Fake async function to simulate food detection from images
+  async function detectFoodsFromImages(files) {
+    // In real usage, call your vision API here.
+    // For demo, just return some sample foods.
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(['cheese', 'bread', 'carrot']); 
+      }, 500);
     });
-    resultsDiv.appendChild(sugContainer);
+  }
 
-    // Budget + healthiness + notes summary below suggestions
+  // Generate suggestions based on inputs, budget, healthiness, notes
+  function generateSuggestions(detectedFoods, budget, healthiness, notes) {
+    // Simulate adding variety and recipe suggestions
+
+    // Base suggestions depending on healthiness
+    let baseSuggestions = [];
+    if (healthiness === 'healthy') {
+      baseSuggestions = ['fresh vegetables', 'lean proteins', 'whole grains', 'fruits', 'nuts'];
+    } else if (healthiness === 'average healthiness') {
+      baseSuggestions = ['balanced mix of vegetables', 'chicken', 'rice', 'fruits', 'legumes'];
+    } else {
+      baseSuggestions = ['comfort foods', 'carbs', 'cheese', 'some vegetables'];
+    }
+
+    // Add budget effect - more budget adds more items (up to 6)
+    let maxItems = 3;
+    if (budget > 50) maxItems = 6;
+    else if (budget > 25) maxItems = 5;
+    else if (budget > 10) maxItems = 4;
+
+    const suggestions = baseSuggestions.slice(0, maxItems);
+
+    // Recipe suggestions (keep it short & sweet)
+    const recipes = [
+      {
+        title: "Veggie Stir Fry",
+        desc: "Quick sauté of fresh veggies with soy sauce and garlic."
+      },
+      {
+        title: "Grilled Chicken Salad",
+        desc: "Lean grilled chicken served on mixed greens."
+      },
+      {
+        title: "Hearty Vegetable Soup",
+        desc: "Warm and filling soup with assorted vegetables."
+      },
+      {
+        title: "Cheese and Bread Platter",
+        desc: "Simple combo of cheeses and fresh bread."
+      },
+      {
+        title: "Fruit & Nut Snack",
+        desc: "Healthy snack combining fresh fruit and nuts."
+      },
+    ];
+
+    return { suggestions, recipes };
+  }
+
+  // Display results in #results container with 2 horizontal scroll sections
+  function displayResults(suggestions, recipes, budget, healthiness, notes) {
+    resultsDiv.innerHTML = ''; // clear previous
+
+    // Header summary
     const summary = document.createElement('p');
-    summary.style.marginTop = '15px';
-    summary.style.fontStyle = 'italic';
-    summary.style.color = '#ade8f4';
-    summary.textContent = `Budget: $${budget} · Healthiness preference: ${healthinessText} · Notes: ${notes || 'None'}`;
+    summary.style.fontWeight = '700';
+    summary.style.marginBottom = '25px';
+    summary.style.fontSize = '1.5rem';
+    summary.textContent = `Budget: $${budget} | Healthiness preference: ${healthiness} | Notes: ${notes || 'None'}`;
     resultsDiv.appendChild(summary);
 
-    // Recipes section
-    const recTitle = document.createElement('h2');
-    recTitle.textContent = 'Recommended Recipes';
-    recTitle.className = 'results-section-title';
-    resultsDiv.appendChild(recTitle);
-
-    // Recipes horizontal scroll container
-    const recContainer = document.createElement('div');
-    recContainer.className = 'horizontal-scroll-container';
-    recipes.forEach(recipe => {
-      const recCard = document.createElement('div');
-      recCard.className = 'recipe-card';
-
-      const title = document.createElement('h4');
-      title.textContent = recipe.title;
-      recCard.appendChild(title);
-
-      const ingr = document.createElement('div');
-      ingr.className = 'recipe-ingredients';
-      ingr.textContent = 'Ingredients: ' + recipe.ingredients.join(', ');
-      recCard.appendChild(ingr);
-
-      const instr = document.createElement('div');
-      instr.className = 'recipe-instructions';
-      instr.textContent = recipe.instructions;
-      recCard.appendChild(instr);
-
-      recContainer.appendChild(recCard);
+    // Suggestions container
+    const suggestionsContainer = document.createElement('div');
+    suggestionsContainer.className = 'suggestions-container';
+    suggestions.forEach(s => {
+      const sug = document.createElement('div');
+      sug.className = 'suggestion';
+      sug.textContent = s;
+      suggestionsContainer.appendChild(sug);
     });
-    resultsDiv.appendChild(recContainer);
+    resultsDiv.appendChild(suggestionsContainer);
+
+    // Recipes container
+    const recipesContainer = document.createElement('div');
+    recipesContainer.className = 'recipes-container';
+    recipes.forEach(r => {
+      const card = document.createElement('div');
+      card.className = 'recipe-card';
+      const title = document.createElement('h3');
+      title.textContent = r.title;
+      const desc = document.createElement('p');
+      desc.textContent = r.desc;
+      card.appendChild(title);
+      card.appendChild(desc);
+      recipesContainer.appendChild(card);
+    });
+    resultsDiv.appendChild(recipesContainer);
   }
 
-  // Determine healthiness text label from slider value
-  function getHealthinessText(val) {
-    if (val <= 33) return 'Unhealthy';
-    else if (val <= 66) return 'Average';
-    else return 'Healthy';
-  }
-
-  // Main event handler for submit button
-  submitBtn.addEventListener('click', () => {
-    // Get inputs
-    const budgetVal = parseFloat(budgetInput.value) || 0;
+  // Submit button click handler
+  submitBtn.addEventListener('click', async () => {
+    // Get user inputs
+    const files = imageUpload.files;
+    const budgetVal = budgetInput.value ? parseFloat(budgetInput.value) : 0;
     const healthVal = parseInt(healthSlider.value);
     const notesVal = notesInput.value.trim();
 
-    // Detect foods from images (mocked)
-    const detectedFoods = detectFoodsFromImages();
+    // Simple validation
+    if (files.length === 0) {
+      alert('Please upload at least one image of your food.');
+      return;
+    }
+    if (budgetVal < 0 || isNaN(budgetVal)) {
+      alert('Please enter a valid budget.');
+      return;
+    }
 
-    // Generate suggestions based on inputs
-    const suggestions = generateSuggestions(budgetVal, healthVal, notesVal);
+    // Fake detect foods from images (replace with real API calls)
+    const detectedFoods = await detectFoodsFromImages(files);
 
-    // Generate recipes (mocked)
-    const recipes = generateRecipes();
+    // Generate suggestions
+    const { suggestions, recipes } = generateSuggestions(detectedFoods, budgetVal, getHealthinessText(healthVal), notesVal);
 
     // Display results
     displayResults(suggestions, recipes, budgetVal, getHealthinessText(healthVal), notesVal);
+
+    // Scroll results smoothly into view
+    resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 });
