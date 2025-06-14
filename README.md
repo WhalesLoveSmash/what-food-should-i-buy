@@ -6,6 +6,7 @@ Enter any additional considerations and get your shopping list <br>
 Tbh this is a gemini wrapper 😭 <br>
 
 #todo: diferent cooking things like can say have oven and crockpot <br> 
+Gemini vision API instead of Gemini (requires credit card) <br>
 smoother slider, <br>
 make food/recipies reach horizontrol screen edges on desktop, <br>
 hide api key (requires workaround since no backend on GH Pages) <br>
