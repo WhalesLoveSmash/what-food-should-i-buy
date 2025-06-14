@@ -5,4 +5,4 @@ Upload pictures of your fridge and cupboard <br>
 Set your budget <br>
 Chose where you fall between health nut and total degenerate <br>
 Enter any additional considerations and get your shopping list <br>
-Tbh this a chat gpt wrapper 😭
+Tbh this gemini wrapper 😭
