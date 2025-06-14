@@ -1,175 +1,169 @@
-// Example datasets for suggestions and recipes
-const ALL_FOOD_SUGGESTIONS = [
-  { name: "Chicken Breast", price: 6, healthy: true },
-  { name: "Salmon Fillet", price: 8, healthy: true },
-  { name: "Broccoli", price: 2, healthy: true },
-  { name: "Spinach", price: 2, healthy: true },
-  { name: "Brown Rice", price: 3, healthy: true },
-  { name: "Quinoa", price: 4, healthy: true },
-  { name: "Sweet Potato", price: 3, healthy: true },
-  { name: "Greek Yogurt", price: 5, healthy: true },
-  { name: "Almonds (small pack)", price: 7, healthy: true },
-  { name: "Eggs (dozen)", price: 4, healthy: true },
-  { name: "Tofu", price: 3, healthy: true },
-  { name: "Apples", price: 2, healthy: true },
-  { name: "Bananas", price: 1, healthy: true },
-  { name: "Cheese", price: 5, healthy: false },
-  { name: "Bread (whole wheat)", price: 3, healthy: false },
-  { name: "Carrot", price: 1, healthy: true },
-  { name: "Chocolate Bar", price: 3, healthy: false },
-  { name: "Ice Cream", price: 4, healthy: false },
-  { name: "Peanut Butter", price: 4, healthy: true },
-  { name: "Oats", price: 3, healthy: true },
-];
+// Wait for DOM ready
+document.addEventListener('DOMContentLoaded', () => {
 
-const ALL_RECIPES = [
-  {
-    title: "Grilled Chicken with Quinoa Salad",
-    ingredients: ["Chicken Breast", "Quinoa", "Spinach", "Lemon", "Olive Oil"],
-    description:
-      "A healthy and flavorful grilled chicken served with a refreshing quinoa salad.",
-  },
-  {
-    title: "Salmon and Sweet Potato Bake",
-    ingredients: ["Salmon Fillet", "Sweet Potato", "Broccoli", "Garlic", "Herbs"],
-    description:
-      "Oven-baked salmon paired with roasted sweet potatoes and broccoli for a balanced meal.",
-  },
-  {
-    title: "Vegetarian Stir-Fry with Tofu",
-    ingredients: ["Tofu", "Broccoli", "Carrot", "Soy Sauce", "Brown Rice"],
-    description:
-      "A quick and tasty vegetarian stir-fry loaded with fresh vegetables and tofu.",
-  },
-  {
-    title: "Greek Yogurt and Almond Parfait",
-    ingredients: ["Greek Yogurt", "Almonds", "Honey", "Berries"],
-    description:
-      "A creamy and crunchy parfait perfect for breakfast or a healthy snack.",
-  },
-  {
-    title: "Oatmeal with Bananas and Peanut Butter",
-    ingredients: ["Oats", "Bananas", "Peanut Butter", "Cinnamon"],
-    description:
-      "Warm and comforting oatmeal topped with bananas and peanut butter for energy.",
-  },
-];
+  const form = document.getElementById('food-form');
+  const submitBtn = document.getElementById('submit-btn');
+  const resultsDiv = document.getElementById('results');
+  const budgetInput = document.getElementById('budget');
+  const healthSlider = document.getElementById('health-slider');
+  const healthLabel = document.getElementById('health-label');
+  const notesInput = document.getElementById('notes');
 
-// A helper function to filter suggestions by healthiness preference
-function filterSuggestionsByHealthiness(suggestions, preference) {
-  if (preference === "healthy") {
-    return suggestions.filter((f) => f.healthy);
-  } else if (preference === "indulgent") {
-    return suggestions.filter((f) => !f.healthy);
-  }
-  return suggestions; // balanced
-}
+  // Update health label dynamically
+  healthSlider.addEventListener('input', () => {
+    const val = parseInt(healthSlider.value);
+    if (val <= 33) healthLabel.textContent = 'Unhealthy';
+    else if (val <= 66) healthLabel.textContent = 'Average';
+    else healthLabel.textContent = 'Healthy';
 
-// Generate food suggestions based on budget and preference
-function generateSuggestions(budget, healthPref, notes) {
-  const filtered = filterSuggestionsByHealthiness(ALL_FOOD_SUGGESTIONS, healthPref);
-
-  // If notes mention 'scared of vegetables', filter out most vegetables but keep some easy ones
-  let vegBlacklist = [];
-  if (notes.toLowerCase().includes("scared of vegetables")) {
-    vegBlacklist = ["Broccoli", "Spinach", "Carrot"];
-  }
-
-  const filteredNoVeg = filtered.filter((food) => !vegBlacklist.includes(food.name));
-
-  // Pick as many items as possible without exceeding budget - greedily cheapest first
-  let remainingBudget = budget;
-  let chosen = [];
-
-  // Sort cheapest first for max variety
-  const sorted = filteredNoVeg.sort((a, b) => a.price - b.price);
-
-  for (const food of sorted) {
-    if (food.price <= remainingBudget) {
-      chosen.push(food);
-      remainingBudget -= food.price;
+    // On mobile, hide number keyboard if open on budget input
+    if (document.activeElement === budgetInput) {
+      budgetInput.blur();
     }
-  }
-
-  return chosen;
-}
-
-// Generate recipe cards that can be made from chosen foods (matching at least 1 ingredient)
-function generateRecipes(chosenFoods) {
-  const chosenNames = chosenFoods.map((f) => f.name);
-
-  // Find recipes that have at least one ingredient from chosen foods
-  const matchingRecipes = ALL_RECIPES.filter((recipe) =>
-    recipe.ingredients.some((ing) => chosenNames.includes(ing))
-  );
-
-  // Limit recipes to max 4 so not overwhelming
-  return matchingRecipes.slice(0, 4);
-}
-
-function createFoodCard(food) {
-  const div = document.createElement("div");
-  div.className = "card";
-  div.innerHTML = `<h3>${food.name}</h3><p>Approx. Price: $${food.price}</p>`;
-  return div;
-}
-
-function createRecipeCard(recipe) {
-  const div = document.createElement("div");
-  div.className = "card";
-  div.innerHTML = `<h3>${recipe.title}</h3><p>${recipe.description}</p><p class="ingredients">Ingredients: ${recipe.ingredients.join(", ")}</p>`;
-  return div;
-}
-
-function renderOutput(suggestions, recipes) {
-  const output = document.getElementById("output");
-  output.innerHTML = "";
-
-  if (suggestions.length === 0) {
-    output.textContent = "Sorry, no suggestions fit your budget and preferences.";
-    return;
-  }
-
-  // Section: Suggestions
-  const sugTitle = document.createElement("h2");
-  sugTitle.textContent = "Food Suggestions for You";
-  output.appendChild(sugTitle);
-
-  const sugScroll = document.createElement("div");
-  sugScroll.className = "scroll-container";
-
-  suggestions.forEach((food) => {
-    sugScroll.appendChild(createFoodCard(food));
   });
 
-  output.appendChild(sugScroll);
+  // Smooth scroll into view when notes textarea focused (mobile-friendly)
+  notesInput.addEventListener('focus', () => {
+    setTimeout(() => {
+      notesInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 300);
+  });
 
-  // Section: Recipes
-  if (recipes.length > 0) {
-    const recTitle = document.createElement("h2");
-    recTitle.textContent = "Try These Recipes";
-    output.appendChild(recTitle);
-
-    const recScroll = document.createElement("div");
-    recScroll.className = "scroll-container";
-
-    recipes.forEach((recipe) => {
-      recScroll.appendChild(createRecipeCard(recipe));
-    });
-
-    output.appendChild(recScroll);
+  // Fake food detection for demo — Replace with your real detection logic
+  // For now, just return a fixed array for testing
+  function detectFoodsFromImages() {
+    // You can read from the file input, run vision API, etc.
+    // For now, pretend we detected:
+    return ['cheese', 'bread', 'carrot'];
   }
-}
 
-document.getElementById("foodForm").addEventListener("submit", (e) => {
-  e.preventDefault();
+  // Mock suggestion generation based on inputs
+  // You can replace this with AI or API calls
+  function generateSuggestions(budget, healthiness, notes) {
+    // Suggest food items based on budget and healthiness
+    // We'll pick some items depending on healthiness preference
+    const healthyFoods = ['fresh vegetables', 'lean proteins', 'whole grains', 'fruits', 'nuts'];
+    const averageFoods = ['pasta', 'chicken', 'rice', 'cheese', 'eggs'];
+    const unhealthyFoods = ['snacks', 'processed meats', 'soda', 'chips'];
 
-  const budget = Number(document.getElementById("budget").value);
-  const healthPref = document.getElementById("healthPref").value;
-  const notes = document.getElementById("notes").value.trim();
+    let chosenFoods;
+    if (healthiness > 66) chosenFoods = healthyFoods;
+    else if (healthiness > 33) chosenFoods = averageFoods;
+    else chosenFoods = unhealthyFoods;
 
-  const suggestions = generateSuggestions(budget, healthPref, notes);
-  const recipes = generateRecipes(suggestions);
+    // Calculate approx number of items user can buy for the budget
+    // Just a rough guess: average cost $3 per item
+    const maxItems = Math.min(chosenFoods.length, Math.floor(budget / 3));
 
-  renderOutput(suggestions, recipes);
+    return chosenFoods.slice(0, maxItems);
+  }
+
+  // Mock recipe generation
+  function generateRecipes() {
+    return [
+      {
+        title: 'Veggie Stir Fry',
+        ingredients: ['Broccoli', 'Carrots', 'Bell Peppers', 'Soy Sauce', 'Garlic'],
+        instructions: 'Chop vegetables. Heat oil in a pan. Stir fry veggies until tender. Add soy sauce and garlic. Serve over rice.'
+      },
+      {
+        title: 'Chicken and Rice Bowl',
+        ingredients: ['Chicken Breast', 'Rice', 'Mixed Vegetables', 'Teriyaki Sauce'],
+        instructions: 'Cook rice. Grill chicken. Steam vegetables. Combine and drizzle with teriyaki sauce.'
+      },
+      {
+        title: 'Fruit & Nut Salad',
+        ingredients: ['Mixed Greens', 'Apple Slices', 'Walnuts', 'Cranberries', 'Feta Cheese'],
+        instructions: 'Mix greens with apple slices, walnuts, and cranberries. Top with feta cheese and a light vinaigrette.'
+      }
+    ];
+  }
+
+  // Clear previous results and build new output UI
+  function displayResults(suggestions, recipes, budget, healthinessText, notes) {
+    resultsDiv.innerHTML = '';
+
+    // Main heading for suggestions
+    const sugTitle = document.createElement('h2');
+    sugTitle.textContent = 'Suggested Food to Buy';
+    sugTitle.className = 'results-section-title';
+    resultsDiv.appendChild(sugTitle);
+
+    // Suggestions horizontal scroll container
+    const sugContainer = document.createElement('div');
+    sugContainer.className = 'horizontal-scroll-container';
+    suggestions.forEach(food => {
+      const card = document.createElement('div');
+      card.className = 'result-card';
+      card.textContent = food;
+      sugContainer.appendChild(card);
+    });
+    resultsDiv.appendChild(sugContainer);
+
+    // Budget + healthiness + notes summary below suggestions
+    const summary = document.createElement('p');
+    summary.style.marginTop = '15px';
+    summary.style.fontStyle = 'italic';
+    summary.style.color = '#ade8f4';
+    summary.textContent = `Budget: $${budget} · Healthiness preference: ${healthinessText} · Notes: ${notes || 'None'}`;
+    resultsDiv.appendChild(summary);
+
+    // Recipes section
+    const recTitle = document.createElement('h2');
+    recTitle.textContent = 'Recommended Recipes';
+    recTitle.className = 'results-section-title';
+    resultsDiv.appendChild(recTitle);
+
+    // Recipes horizontal scroll container
+    const recContainer = document.createElement('div');
+    recContainer.className = 'horizontal-scroll-container';
+    recipes.forEach(recipe => {
+      const recCard = document.createElement('div');
+      recCard.className = 'recipe-card';
+
+      const title = document.createElement('h4');
+      title.textContent = recipe.title;
+      recCard.appendChild(title);
+
+      const ingr = document.createElement('div');
+      ingr.className = 'recipe-ingredients';
+      ingr.textContent = 'Ingredients: ' + recipe.ingredients.join(', ');
+      recCard.appendChild(ingr);
+
+      const instr = document.createElement('div');
+      instr.className = 'recipe-instructions';
+      instr.textContent = recipe.instructions;
+      recCard.appendChild(instr);
+
+      recContainer.appendChild(recCard);
+    });
+    resultsDiv.appendChild(recContainer);
+  }
+
+  // Determine healthiness text label from slider value
+  function getHealthinessText(val) {
+    if (val <= 33) return 'Unhealthy';
+    else if (val <= 66) return 'Average';
+    else return 'Healthy';
+  }
+
+  // Main event handler for submit button
+  submitBtn.addEventListener('click', () => {
+    // Get inputs
+    const budgetVal = parseFloat(budgetInput.value) || 0;
+    const healthVal = parseInt(healthSlider.value);
+    const notesVal = notesInput.value.trim();
+
+    // Detect foods from images (mocked)
+    const detectedFoods = detectFoodsFromImages();
+
+    // Generate suggestions based on inputs
+    const suggestions = generateSuggestions(budgetVal, healthVal, notesVal);
+
+    // Generate recipes (mocked)
+    const recipes = generateRecipes();
+
+    // Display results
+    displayResults(suggestions, recipes, budgetVal, getHealthinessText(healthVal), notesVal);
+  });
 });
