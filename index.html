@@ -18,17 +18,14 @@
       <input type="file" id="image-upload" accept="image/*" multiple />
     </label>
 
-    <label class="input-label" for="budget">
+    <label id="budget-label" class="input-label" for="budget">
       Budget:
       <input type="number" id="budget" min="0" />
     </label>
 
-    <label for="health-slider">
-      Healthiness:
-    </label>
-    <br />
+    <label for="health-slider">Healthiness:</label><br />
     <input type="range" id="health-slider" min="0" max="100" value="50" />
-    <p id="health-label">Average</p>
+    <p id="health-text">Average</p>
 
     <label class="input-label" for="notes">
       Additional considerations:
